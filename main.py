@@ -1,0 +1,83 @@
+import tkinter as tk
+from tkinter import ttk, filedialog, scrolledtext
+import json
+import re
+
+
+# Load filters from JSON
+def load_filters(json_path="example_filters.json"):
+    with open(json_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_file():
+    filepath = filedialog.askopenfilename(
+        title="Select a text file",
+        filetypes=[("Text files", "*.txt"), ("All files", "*.*")],
+    )
+    if not filepath:
+        return
+
+    # Clear existing text boxes
+    for text_widget in text_widgets.values():
+        text_widget.delete("1.0", tk.END)
+
+    # Stream through the file line by line
+    with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+        for line in f:
+            stripped = line.strip()
+            if not stripped:
+                continue
+
+            # Always show in "Original"
+            text_widgets["Original"].insert(tk.END, stripped + "\n")
+
+            # Apply filters
+            for flt in filters:
+                if flt["reg"]:
+                    # Regex match
+                    if re.search(flt["keyword"], stripped):
+                        text_widgets[flt["name"]].insert(tk.END, stripped + "\n")
+                else:
+                    # Simple substring match
+                    if flt["keyword"] in stripped:
+                        text_widgets[flt["name"]].insert(tk.END, stripped + "\n")
+
+
+# --- GUI Setup ---
+root = tk.Tk()
+root.title("Large Text File Viewer with JSON Filters")
+root.geometry("800x600")
+
+notebook = ttk.Notebook(root)
+notebook.pack(fill="both", expand=True)
+
+# Load filters from JSON file
+filters = load_filters()
+
+# Predefined "Original" tab
+text_widgets = {}
+frame = ttk.Frame(notebook)
+notebook.add(frame, text="Original")
+text_area = scrolledtext.ScrolledText(frame, wrap=tk.WORD)
+text_area.pack(fill="both", expand=True)
+text_widgets["Original"] = text_area
+
+# Create tabs dynamically from filters
+for flt in filters:
+    frame = ttk.Frame(notebook)
+    notebook.add(frame, text=flt["name"])
+    text_area = scrolledtext.ScrolledText(frame, wrap=tk.WORD)
+    text_area.pack(fill="both", expand=True)
+    text_widgets[flt["name"]] = text_area
+
+# Menu for loading file
+menubar = tk.Menu(root)
+file_menu = tk.Menu(menubar, tearoff=0)
+file_menu.add_command(label="Open File", command=load_file)
+file_menu.add_separator()
+file_menu.add_command(label="Exit", command=root.quit)
+menubar.add_cascade(label="File", menu=file_menu)
+root.config(menu=menubar)
+
+root.mainloop()

@@ -1,0 +1,12 @@
+[
+    {
+        "name": "with_a",
+        "reg": false,
+        "keyword": "a"
+    },
+    {
+        "name": "with_g",
+        "reg": false,
+        "keyword": "a"
+    }
+]
