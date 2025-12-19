@@ -1,12 +1,22 @@
 [
     {
         "name": "with_a",
-        "reg": false,
-        "keyword": "a"
+        "filters":
+        [
+            {
+                "reg": false,
+                "keyword": "a"
+            }
+        ]
     },
     {
         "name": "with_g",
-        "reg": false,
-        "keyword": "g"
+        "filters":
+        [
+            {
+                "reg": true,
+                "keyword": "g"
+            }
+        ]
     }
 ]
