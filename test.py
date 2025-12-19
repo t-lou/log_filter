@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Simple tests without pytest."""
 
 from main import Filter
