@@ -89,6 +89,7 @@ def load_file():
 
     # Clear existing text boxes
     for text_widget in GLOBALS["text_widgets"].values():
+        text_widget.config(state="normal")
         text_widget.delete("1.0", tk.END)
 
     # Stream through the file line by line
@@ -105,6 +106,10 @@ def load_file():
             for tab_name, tab_filters in GLOBALS["filters"].items():
                 if tab_filters.match(stripped):
                     GLOBALS["text_widgets"][tab_name].insert(tk.END, stripped + "\n")
+
+    # Lock the text boxes to forbid editing
+    for text_widget in GLOBALS["text_widgets"].values():
+        text_widget.config(state="disabled")
 
 
 def main_gui() -> None:
