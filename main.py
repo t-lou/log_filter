@@ -5,30 +5,11 @@ from pathlib import Path
 import re
 import shutil
 
+from src.filter import Filter
+
 
 # global variables, try to refactor
 GLOBALS = {}
-
-
-class Filter:
-    def __init__(self, settings: list[dict], all_match: bool) -> None:
-        self._settings = settings
-        self._all_match = all_match
-
-    @staticmethod
-    def _match_setting(setting: dict, line: str) -> bool:
-        if setting["reg"]:
-            # Regex match
-            pattern = re.compile(setting["keyword"])
-            return bool(pattern.search(line))
-        else:
-            # Simple substring match
-            return setting["keyword"] in line
-
-    def match(self, line) -> bool:
-        return (all if self._all_match else any)(
-            Filter._match_setting(setting, line) for setting in self._settings
-        )
 
 
 def is_headless() -> bool:
@@ -105,7 +86,7 @@ def load_file():
             GLOBALS["text_widgets"]["Original"].insert(tk.END, stripped + "\n")
 
             # Apply filters
-            for tab_name, tab_filters in GLOBALS["filters"].items():
+            for tab_name, tab_filters in filters.items():
                 if tab_filters.match(stripped):
                     GLOBALS["text_widgets"][tab_name].insert(tk.END, stripped + "\n")
 
@@ -114,7 +95,7 @@ def load_file():
         text_widget.config(state="disabled")
 
 
-def main_gui() -> None:
+def main_gui(filters: dict[str, Filter]) -> None:
     import tkinter as tk
     from tkinter import ttk, scrolledtext
 
@@ -135,7 +116,7 @@ def main_gui() -> None:
     GLOBALS["text_widgets"]["Original"] = text_area
 
     # Create tabs dynamically from filters
-    for flt in GLOBALS["filters"].keys():
+    for flt in filters.keys():
         frame = ttk.Frame(notebook)
         notebook.add(frame, text=flt)
         text_area = scrolledtext.ScrolledText(frame, wrap=tk.WORD)
@@ -178,7 +159,7 @@ def parse_cli_args():
     return parser.parse_args()
 
 
-def main_cli() -> None:
+def main_cli(filters: dict[str, Filter]) -> None:
     args = parse_cli_args()
 
     print("Input file:", args.input_file, type(args.input_file))
@@ -199,7 +180,7 @@ def main_cli() -> None:
     # Stream through the file line by line
     outputs = []
     ordered_filters = []
-    for name, filters in GLOBALS["filters"].items():
+    for name, filters in filters.items():
         f = (args.output_dir / (name + ".txt")).open("w", encoding="utf-8")
         outputs.append(f)
         ordered_filters.append(filters)
@@ -223,9 +204,9 @@ def main_cli() -> None:
 
 if __name__ == "__main__":
     # Load filters from JSON file as use as global variable
-    GLOBALS["filters"] = load_filters()
+    filters = load_filters()
 
     if is_headless():
-        main_cli()
+        main_cli(filters)
     else:
-        main_gui()
+        main_gui(filters)

@@ -3,3 +3,6 @@
 
 # But keep this one
 !example_*.json
+
+# Python cache
+**/__pycache__
