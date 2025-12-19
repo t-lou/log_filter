@@ -9,21 +9,24 @@ GLOBALS = {}
 
 
 class Filter:
-    def __init__(self, settings: list[dict], is_and: bool) -> None:
+    def __init__(self, settings: list[dict], all_match: bool) -> None:
         self._settings = settings
-        self._is_and = is_and
+        self._all_match = all_match
 
     @staticmethod
     def _match_setting(setting: dict, line: str) -> bool:
         if setting["reg"]:
             # Regex match
-            return bool(re.search(setting["keyword"], line))
+            pattern = re.compile(setting["keyword"])
+            return bool(pattern.search(line))
         else:
             # Simple substring match
             return setting["keyword"] in line
 
     def match(self, line) -> bool:
-        return (any if self._is_and else all)(Filter._match_setting(setting, line) for setting in self._settings)
+        return (all if self._all_match else any)(
+            Filter._match_setting(setting, line) for setting in self._settings
+        )
 
 
 def is_headless() -> bool:
@@ -60,7 +63,10 @@ def load_filters() -> dict:
         with Path(main_config["entry_config"]).open("r", encoding="utf-8") as ff:
             settings = json.load(ff)
 
-    filters = {s["name"]: Filter(settings=s["filters"], is_and=s["filters"]) for s in settings}
+    filters = {
+        s["name"]: Filter(settings=s["filters"], all_match=s["all_match"])
+        for s in settings
+    }
     assert len(filters) == len(settings), "Names must be unique."
     return filters
 

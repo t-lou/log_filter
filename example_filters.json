@@ -8,10 +8,10 @@
                 "keyword": "se"
             }
         ],
-        "and": true
+        "all_match": true
     },
     {
-        "name": "se&a",
+        "name": "se&amet",
         "filters":
         [
             {
@@ -20,39 +20,50 @@
             },
             {
                 "reg": false,
-                "keyword": "a"
+                "keyword": "amet"
             }
         ],
-        "and": true
+        "all_match": true
     },
     {
-        "name": "et&a",
+        "name": "est&amet",
         "filters":
         [
             {
                 "reg": true,
-                "keyword": "et"
+                "keyword": "est"
             },
             {
                 "reg": true,
-                "keyword": "a"
+                "keyword": "amet"
             }
         ],
-        "and": true
+        "all_match": true
     },
     {
-        "name": "et|a",
+        "name": "amet",
         "filters":
         [
             {
                 "reg": true,
-                "keyword": "et"
+                "keyword": "amet"
+            }
+        ],
+        "all_match": true
+    },
+    {
+        "name": "elitr|amet",
+        "filters":
+        [
+            {
+                "reg": true,
+                "keyword": "elitr"
             },
             {
                 "reg": true,
-                "keyword": "a"
+                "keyword": "amet"
             }
         ],
-        "and": false
+        "all_match": false
     }
 ]
