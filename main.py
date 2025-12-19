@@ -7,6 +7,10 @@ import shutil
 import sys
 
 
+# global variables, try to refactor
+GLOBALS = {}
+
+
 def is_headless() -> bool:
     try:
         import tkinter as tk
@@ -57,7 +61,7 @@ def load_file():
         return
 
     # Clear existing text boxes
-    for text_widget in text_widgets.values():
+    for text_widget in GLOBALS["text_widgets"].values():
         text_widget.delete("1.0", tk.END)
 
     # Stream through the file line by line
@@ -68,24 +72,25 @@ def load_file():
                 continue
 
             # Always show in "Original"
-            text_widgets["Original"].insert(tk.END, stripped + "\n")
+            GLOBALS["text_widgets"]["Original"].insert(tk.END, stripped + "\n")
 
             # Apply filters
-            for flt in filters:
+            for flt in GLOBALS["filters"]:
                 if flt["reg"]:
                     # Regex match
                     if re.search(flt["keyword"], stripped):
-                        text_widgets[flt["name"]].insert(tk.END, stripped + "\n")
+                        GLOBALS["text_widgets"][flt["name"]].insert(
+                            tk.END, stripped + "\n"
+                        )
                 else:
                     # Simple substring match
                     if flt["keyword"] in stripped:
-                        text_widgets[flt["name"]].insert(tk.END, stripped + "\n")
+                        GLOBALS["text_widgets"][flt["name"]].insert(
+                            tk.END, stripped + "\n"
+                        )
 
 
-if __name__ == "__main__":
-    # Load filters from JSON file
-    filters = load_filters()
-
+def main_gui() -> None:
     # --- GUI Setup ---
     root = tk.Tk()
     root.title("Large Text File Viewer with JSON Filters")
@@ -95,20 +100,20 @@ if __name__ == "__main__":
     notebook.pack(fill="both", expand=True)
 
     # Predefined "Original" tab
-    text_widgets = {}
+    GLOBALS["text_widgets"] = {}
     frame = ttk.Frame(notebook)
     notebook.add(frame, text="Original")
     text_area = scrolledtext.ScrolledText(frame, wrap=tk.WORD)
     text_area.pack(fill="both", expand=True)
-    text_widgets["Original"] = text_area
+    GLOBALS["text_widgets"]["Original"] = text_area
 
     # Create tabs dynamically from filters
-    for flt in filters:
+    for flt in GLOBALS["filters"]:
         frame = ttk.Frame(notebook)
         notebook.add(frame, text=flt["name"])
         text_area = scrolledtext.ScrolledText(frame, wrap=tk.WORD)
         text_area.pack(fill="both", expand=True)
-        text_widgets[flt["name"]] = text_area
+        GLOBALS["text_widgets"][flt["name"]] = text_area
 
     # Menu for loading file
     menubar = tk.Menu(root)
@@ -120,3 +125,11 @@ if __name__ == "__main__":
     root.config(menu=menubar)
 
     root.mainloop()
+
+
+if __name__ == "__main__":
+    # Load filters from JSON file as use as global variable
+    GLOBALS["filters"] = load_filters()
+
+    if not is_headless():
+        main_gui()
