@@ -9,8 +9,9 @@ GLOBALS = {}
 
 
 class Filter:
-    def __init__(self, settings: dict) -> None:
+    def __init__(self, settings: list[dict], is_and: bool) -> None:
         self._settings = settings
+        self._is_and = is_and
 
     @staticmethod
     def _match_setting(setting: dict, line: str) -> bool:
@@ -22,7 +23,7 @@ class Filter:
             return setting["keyword"] in line
 
     def match(self, line) -> bool:
-        return any(Filter._match_setting(setting, line) for setting in self._settings)
+        return (any if self._is_and else all)(Filter._match_setting(setting, line) for setting in self._settings)
 
 
 def is_headless() -> bool:
@@ -59,7 +60,7 @@ def load_filters() -> dict:
         with Path(main_config["entry_config"]).open("r", encoding="utf-8") as ff:
             settings = json.load(ff)
 
-    filters = {s["name"]: Filter(s["filters"]) for s in settings}
+    filters = {s["name"]: Filter(settings=s["filters"], is_and=s["filters"]) for s in settings}
     assert len(filters) == len(settings), "Names must be unique."
     return filters
 
