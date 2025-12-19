@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 import re
 import shutil
-import sys
 
 
 # global variables, try to refactor
@@ -40,7 +39,7 @@ def is_headless() -> bool:
         root.update_idletasks()
         root.destroy()
         print("Tkinter can be imported and a window can be launched.")
-    except tk.TclError as e:
+    except tk.TclError:
         print(
             "Tkinter is available but cannot open a window (likely headless environment)."
         )
