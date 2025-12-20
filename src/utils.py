@@ -28,13 +28,15 @@ def is_headless() -> bool:
 
 # Load filters from JSON
 def load_filters() -> dict:
-    json_path = Path("config.json")
+    folder_code = Path(__file__).resolve().parent.parent
+
+    json_path = folder_code / "config.json"
     if not json_path.exists():
-        shutil.copy(Path("example_config.json"), json_path)
+        shutil.copy((folder_code / "example_config.json"), json_path)
     with json_path.open("r", encoding="utf-8") as fc:
         main_config = json.load(fc)
 
-        with Path(main_config["entry_config"]).open("r", encoding="utf-8") as ff:
+        with (folder_code / main_config["entry_config"]).open("r", encoding="utf-8") as ff:
             settings = json.load(ff)
 
     filters = {s["name"]: Filter(settings=s["filters"], all_match=s["all_match"]) for s in settings}
