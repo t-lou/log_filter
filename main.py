@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 
-import json
-from pathlib import Path
-import re
-import shutil
 
-from src.filter import Filter
 from src.cli import main_cli
 from src.gui import main_gui
 from src.utils import is_headless, load_filters
