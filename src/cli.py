@@ -42,6 +42,7 @@ def main_cli(filters: dict[str, Filter]) -> None:
         assert args.output_dir.is_dir(), (
             f"Existing output path {args.output_dir} is a file."
         )
+        print(f"Remove {args.output_dir}")
         shutil.rmtree(args.output_dir)
 
     args.output_dir.mkdir()
