@@ -53,6 +53,10 @@ def main_gui(filters: dict[str, Filter]) -> None:
     root.title("LOG VIEWER")
     root.geometry("800x600")
 
+    # Apply "clam" as theme, as tabs are clearer
+    style = ttk.Style(root)
+    style.theme_use("clam")
+
     notebook = ttk.Notebook(root)
     notebook.pack(fill="both", expand=True)
 
