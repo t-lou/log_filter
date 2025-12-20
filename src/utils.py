@@ -19,9 +19,7 @@ def is_headless() -> bool:
         root.destroy()
         print("Tkinter can be imported and a window can be launched.")
     except:  # noqa: E722
-        print(
-            "Tkinter is available but cannot open a window (likely headless environment)."
-        )
+        print("Tkinter is available but cannot open a window (likely headless environment).")
         return True
 
     return False
@@ -38,9 +36,6 @@ def load_filters() -> dict:
         with Path(main_config["entry_config"]).open("r", encoding="utf-8") as ff:
             settings = json.load(ff)
 
-    filters = {
-        s["name"]: Filter(settings=s["filters"], all_match=s["all_match"])
-        for s in settings
-    }
+    filters = {s["name"]: Filter(settings=s["filters"], all_match=s["all_match"]) for s in settings}
     assert len(filters) == len(settings), "Names must be unique."
     return filters

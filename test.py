@@ -39,9 +39,7 @@ def test_filter_regex():
 
 
 def test_filter_all():
-    filter = Filter(
-        [{"reg": False, "keyword": "sand"}, {"reg": False, "keyword": "wich"}], True
-    )
+    filter = Filter([{"reg": False, "keyword": "sand"}, {"reg": False, "keyword": "wich"}], True)
 
     assert filter.match("sandwich")
     assert filter.match("wichsand")
@@ -55,9 +53,7 @@ def test_filter_all():
 
 
 def test_filter_any():
-    filter = Filter(
-        [{"reg": False, "keyword": "sand"}, {"reg": False, "keyword": "wich"}], False
-    )
+    filter = Filter([{"reg": False, "keyword": "sand"}, {"reg": False, "keyword": "wich"}], False)
 
     assert filter.match("sandwich")
     assert filter.match("wichsand")

@@ -17,6 +17,4 @@ class Filter:
             return setting["keyword"] in line
 
     def match(self, line) -> bool:
-        return (all if self._all_match else any)(
-            Filter._match_setting(setting, line) for setting in self._settings
-        )
+        return (all if self._all_match else any)(Filter._match_setting(setting, line) for setting in self._settings)

@@ -1,12 +1,12 @@
 from pathlib import Path
+import tkinter as tk
+from tkinter import filedialog, ttk, scrolledtext
+
 
 from src.filter import Filter
 
 
 def load_file(filters: dict[str, Filter], text_widgets):
-    import tkinter as tk
-    from tkinter import filedialog
-
     filepath = filedialog.askopenfilename(
         title="Select a text file",
         filetypes=[
@@ -45,9 +45,6 @@ def load_file(filters: dict[str, Filter], text_widgets):
 
 
 def main_gui(filters: dict[str, Filter]) -> None:
-    import tkinter as tk
-    from tkinter import ttk, scrolledtext
-
     # --- GUI Setup ---
     root = tk.Tk()
     root.title("LOG VIEWER")
@@ -79,9 +76,7 @@ def main_gui(filters: dict[str, Filter]) -> None:
     # Menu for loading file
     menubar = tk.Menu(root)
     file_menu = tk.Menu(menubar, tearoff=0)
-    file_menu.add_command(
-        label="Open File", command=lambda: load_file(filters, text_widgets)
-    )
+    file_menu.add_command(label="Open File", command=lambda: load_file(filters, text_widgets))
     file_menu.add_separator()
     file_menu.add_command(label="Exit", command=root.quit)
     menubar.add_cascade(label="File", menu=file_menu)

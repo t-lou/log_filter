@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 import shutil
 
@@ -5,16 +6,10 @@ from src.filter import Filter
 
 
 def parse_cli_args():
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="Process an input file and optionally specify an output directory."
-    )
+    parser = argparse.ArgumentParser(description="Process an input file and optionally specify an output directory.")
 
     # Mandatory positional argument
-    parser.add_argument(
-        "input_file", type=Path, help="Path to the input file (mandatory)"
-    )
+    parser.add_argument("input_file", type=Path, help="Path to the input file (mandatory)")
 
     # Optional positional argument with default
     parser.add_argument(
@@ -39,9 +34,7 @@ def main_cli(filters: dict[str, Filter]) -> None:
 
     # Clear output
     if args.output_dir.exists():
-        assert args.output_dir.is_dir(), (
-            f"Existing output path {args.output_dir} is a file."
-        )
+        assert args.output_dir.is_dir(), f"Existing output path {args.output_dir} is a file."
         print(f"Remove {args.output_dir}")
         shutil.rmtree(args.output_dir)
 
