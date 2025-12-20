@@ -4,10 +4,6 @@ import shutil
 from src.filter import Filter
 
 
-# global variables, try to refactor
-GLOBALS = {}
-
-
 def parse_cli_args():
     import argparse
 

@@ -6,10 +6,6 @@ from src.gui import main_gui
 from src.utils import is_headless, load_filters
 
 
-# global variables, try to refactor
-GLOBALS = {}
-
-
 if __name__ == "__main__":
     # Load filters from JSON file as use as global variable
     filters = load_filters()
