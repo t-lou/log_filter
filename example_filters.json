@@ -1,8 +1,7 @@
 [
     {
         "name": "se",
-        "filters":
-        [
+        "filters": [
             {
                 "reg": false,
                 "keyword": "se"
@@ -12,8 +11,7 @@
     },
     {
         "name": "se_and_amet",
-        "filters":
-        [
+        "filters": [
             {
                 "reg": false,
                 "keyword": "se"
@@ -27,8 +25,7 @@
     },
     {
         "name": "est_and_amet",
-        "filters":
-        [
+        "filters": [
             {
                 "reg": true,
                 "keyword": "est"
@@ -42,8 +39,7 @@
     },
     {
         "name": "amet",
-        "filters":
-        [
+        "filters": [
             {
                 "reg": true,
                 "keyword": "amet"
@@ -53,8 +49,7 @@
     },
     {
         "name": "elitr_or_amet",
-        "filters":
-        [
+        "filters": [
             {
                 "reg": true,
                 "keyword": "elitr"
