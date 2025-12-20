@@ -78,3 +78,4 @@ if __name__ == "__main__":
     test_filter_regex()
     test_filter_all()
     test_filter_any()
+    print("tests passed")
