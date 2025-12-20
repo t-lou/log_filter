@@ -7,7 +7,7 @@ from src.filter import Filter
 def is_headless() -> bool:
     try:
         import tkinter as tk
-    except ImportError:
+    except:  # noqa: E722
         print("Tkinter is not available in this Python installation.")
         return True
 
@@ -18,7 +18,7 @@ def is_headless() -> bool:
         root.update_idletasks()
         root.destroy()
         print("Tkinter can be imported and a window can be launched.")
-    except tk.TclError:
+    except:  # noqa: E722
         print(
             "Tkinter is available but cannot open a window (likely headless environment)."
         )

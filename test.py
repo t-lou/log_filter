@@ -9,7 +9,7 @@ def _precheck_assert():
     try:
         assert False
         print("assert not working")
-    except:
+    except:  # noqa: E722
         print("assert working")
 
 
