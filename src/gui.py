@@ -20,7 +20,7 @@ def load_file(filters: dict[str, Filter], text_widgets: dict[str, scrolledtext.S
     if not filepath or not path.exists():
         return
 
-    root_gui.title(f"log reader -- {path.stem}")
+    root_gui.title(f"log filter -- {path.stem}")
 
     # Clear existing text boxes
     for text_widget in text_widgets.values():
@@ -69,7 +69,7 @@ def save_to(text_widgets: dict[str, scrolledtext.ScrolledText]):
 def main_gui(filters: dict[str, Filter]) -> None:
     # --- GUI Setup ---
     root = tk.Tk()
-    root.title("log reader")
+    root.title("log filter")
     root.geometry("800x600")
 
     # Apply "clam" as theme, as tabs are clearer

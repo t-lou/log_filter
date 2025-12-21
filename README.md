@@ -1,4 +1,4 @@
-# Log Reader
+# Log Filter
 
 Do you always need to search for the same keywords in huge log files?
 
