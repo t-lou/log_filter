@@ -4,7 +4,7 @@ from pathlib import Path
 from tkinter import filedialog, scrolledtext, ttk
 
 from src.filter import Filter
-from src.utils import make_name_filename
+from src.utils import load_filters, make_name_filename
 
 
 def load_file(filters: dict[str, Filter], text_widgets: dict[str, scrolledtext.ScrolledText], root_gui: tk.Tk):
@@ -81,7 +81,7 @@ def save_to(text_widgets: dict[str, scrolledtext.ScrolledText]):
         out_path.write_text(content, encoding="utf-8")
 
 
-def main_gui(filters: dict[str, Filter]) -> None:
+def main_gui() -> None:
     root = tk.Tk()
     root.title("log filter")
     root.geometry("800x600")
@@ -101,6 +101,7 @@ def main_gui(filters: dict[str, Filter]) -> None:
     text_area.pack(fill="both", expand=True)
     text_widgets["original"] = text_area
 
+    filters = load_filters()
     # Filter tabs
     for flt_name in filters.keys():
         frame = ttk.Frame(notebook)

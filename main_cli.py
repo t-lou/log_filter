@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
 from src.cli import main_cli
-from src.utils import load_filters
 
 
 def main():
-    filters = load_filters()
-    main_cli(filters)
+    main_cli()
 
 
 if __name__ == "__main__":

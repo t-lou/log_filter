@@ -34,9 +34,9 @@ def is_headless() -> bool:
         return True
 
 
-def fix_filters(json_path: Path) -> None:
+def fix_config(json_path: Path) -> None:
     """
-    Fix filter definitions in the given JSON file by ensuring the needed fields are available.
+    Fix config in the given JSON file by ensuring the needed fields are available.
 
     This function is for backward compatibility with older config files.
     """
@@ -55,9 +55,9 @@ def fix_filters(json_path: Path) -> None:
         print(f"Updated filter definitions in {json_path} to include missing names.")
 
 
-def load_filters() -> dict[str, Filter]:
+def load_config() -> dict:
     """
-    Load filter definitions from config.json and the referenced entry_config.
+    Load the main configuration from config.json.
     Ensures config.json exists by copying example_config.json if needed.
     """
     folder_code = Path(__file__).resolve().parent.parent
@@ -69,7 +69,7 @@ def load_filters() -> dict[str, Filter]:
         with json_path.open("w", encoding="utf-8") as f:
             json.dump(DEFAULT_CONFIG, f, indent=4)
 
-    fix_filters(json_path)
+    fix_config(json_path)
 
     # Load main config
     with json_path.open("r", encoding="utf-8") as fc:
@@ -82,6 +82,16 @@ def load_filters() -> dict[str, Filter]:
     # Load filter settings
     with entry_config_path.open("r", encoding="utf-8") as ff:
         settings = json.load(ff)
+
+    return settings
+
+
+def load_filters() -> dict[str, Filter]:
+    """
+    Load filter definitions from config.json and the referenced entry_config.
+    Ensures config.json exists by copying example_config.json if needed.
+    """
+    settings = load_config()
 
     # Build Filter objects
     filters = {s["name"]: Filter(settings=s["filters"], all_match=s["all_match"]) for s in settings}

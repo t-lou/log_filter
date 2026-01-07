@@ -3,7 +3,7 @@ import shutil
 from pathlib import Path
 
 from src.filter import Filter
-from src.utils import make_name_filename
+from src.utils import load_filters, make_name_filename
 
 
 def parse_cli_args():
@@ -59,10 +59,12 @@ def filter_logs(filters: dict[str, Filter], input_file: Path, output_dir: Path) 
             f.close()
 
 
-def main_cli(filters: dict[str, Filter]) -> None:
+def main_cli() -> None:
     args = parse_cli_args()
 
     print("Input file:", args.input_file)
     print("Output dir:", args.output_dir)
+
+    filters = load_filters()
 
     filter_logs(filters, args.input_file, args.output_dir)
