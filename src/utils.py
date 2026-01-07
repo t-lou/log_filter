@@ -3,9 +3,11 @@ from pathlib import Path
 
 from src.filter import Filter
 
+FOLDER_CODE = Path(__file__).resolve().parent.parent
+
 DEFAULT_CONFIG = {
     "entry_config": "example_filters.json",
-    "show_original": True,
+    "show_original": False,
     "max_line": 1000,
     "show_first_max_line": False,
 }
@@ -60,9 +62,8 @@ def load_config() -> dict:
     Load the main configuration from config.json.
     Ensures config.json exists by copying example_config.json if needed.
     """
-    folder_code = Path(__file__).resolve().parent.parent
 
-    json_path = folder_code / "config.json"
+    json_path = FOLDER_CODE / "config.json"
 
     # Ensure config.json exists
     if not json_path.exists():
@@ -75,15 +76,7 @@ def load_config() -> dict:
     with json_path.open("r", encoding="utf-8") as fc:
         main_config = json.load(fc)
 
-    entry_config_path = folder_code / main_config["entry_config"]
-    if not entry_config_path.exists():
-        raise FileNotFoundError(f"Entry config file not found: {entry_config_path}")
-
-    # Load filter settings
-    with entry_config_path.open("r", encoding="utf-8") as ff:
-        settings = json.load(ff)
-
-    return settings
+    return main_config
 
 
 def load_filters() -> dict[str, Filter]:
@@ -91,7 +84,15 @@ def load_filters() -> dict[str, Filter]:
     Load filter definitions from config.json and the referenced entry_config.
     Ensures config.json exists by copying example_config.json if needed.
     """
-    settings = load_config()
+    main_config = load_config()
+
+    entry_config_path = FOLDER_CODE / main_config["entry_config"]
+    if not entry_config_path.exists():
+        raise FileNotFoundError(f"Entry config file not found: {entry_config_path}")
+
+    # Load filter settings
+    with entry_config_path.open("r", encoding="utf-8") as ff:
+        settings = json.load(ff)
 
     # Build Filter objects
     filters = {s["name"]: Filter(settings=s["filters"], all_match=s["all_match"]) for s in settings}

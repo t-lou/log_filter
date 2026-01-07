@@ -4,7 +4,7 @@ from pathlib import Path
 from tkinter import filedialog, scrolledtext, ttk
 
 from src.filter import Filter
-from src.utils import load_filters, make_name_filename
+from src.utils import load_filters, load_config, make_name_filename
 
 
 def load_file(filters: dict[str, Filter], text_widgets: dict[str, scrolledtext.ScrolledText], root_gui: tk.Tk):
@@ -42,8 +42,9 @@ def load_file(filters: dict[str, Filter], text_widgets: dict[str, scrolledtext.S
 
             stripped = line.rstrip("\n")
 
-            # Always add to original
-            buffers["original"].append(stripped)
+            if "original" in buffers:
+                # Always add to original
+                buffers["original"].append(stripped)
 
             # Apply filters
             for tab_name, flt in filters.items():
@@ -93,15 +94,17 @@ def main_gui() -> None:
     notebook.pack(fill="both", expand=True)
 
     text_widgets = {}
+    config = load_config()
+    filters = load_filters()
 
     # Original tab
-    frame = ttk.Frame(notebook)
-    notebook.add(frame, text="original")
-    text_area = scrolledtext.ScrolledText(frame, wrap=tk.WORD)
-    text_area.pack(fill="both", expand=True)
-    text_widgets["original"] = text_area
+    if config.get("show_original", True):
+        frame = ttk.Frame(notebook)
+        notebook.add(frame, text="original")
+        text_area = scrolledtext.ScrolledText(frame, wrap=tk.WORD)
+        text_area.pack(fill="both", expand=True)
+        text_widgets["original"] = text_area
 
-    filters = load_filters()
     # Filter tabs
     for flt_name in filters.keys():
         frame = ttk.Frame(notebook)
