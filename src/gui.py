@@ -11,8 +11,8 @@ def load_file(filters: dict[str, Filter], text_widgets: dict[str, scrolledtext.S
     filepath = filedialog.askopenfilename(
         title="Select a text file",
         filetypes=[
-            ("Text files", "*.txt"),
             ("Log files", "*.log"),
+            ("Text files", "*.txt"),
             ("All files", "*.*"),
         ],
     )
