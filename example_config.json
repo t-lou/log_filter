@@ -1,3 +1,6 @@
 {
-    "entry_config": "example_filters.json"
+    "entry_config": "example_filters.json",
+    "show_original": true,
+    "max_line": 1000,
+    "show_first_max_line": false
 }

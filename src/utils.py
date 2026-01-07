@@ -1,8 +1,14 @@
 import json
-import shutil
 from pathlib import Path
 
 from src.filter import Filter
+
+DEFAULT_CONFIG = {
+    "entry_config": "example_filters.json",
+    "show_original": True,
+    "max_line": 1000,
+    "show_first_max_line": False,
+}
 
 
 def is_headless() -> bool:
@@ -28,6 +34,27 @@ def is_headless() -> bool:
         return True
 
 
+def fix_filters(json_path: Path) -> None:
+    """
+    Fix filter definitions in the given JSON file by ensuring the needed fields are available.
+
+    This function is for backward compatibility with older config files.
+    """
+    with json_path.open("r", encoding="utf-8") as f:
+        settings = json.load(f)
+
+    modified = False
+    for name, value in DEFAULT_CONFIG.items():
+        if name not in settings:
+            settings[name] = value
+            modified = True
+
+    if modified:
+        with json_path.open("w", encoding="utf-8") as f:
+            json.dump(settings, f, indent=4)
+        print(f"Updated filter definitions in {json_path} to include missing names.")
+
+
 def load_filters() -> dict[str, Filter]:
     """
     Load filter definitions from config.json and the referenced entry_config.
@@ -36,13 +63,13 @@ def load_filters() -> dict[str, Filter]:
     folder_code = Path(__file__).resolve().parent.parent
 
     json_path = folder_code / "config.json"
-    example_path = folder_code / "example_config.json"
 
     # Ensure config.json exists
     if not json_path.exists():
-        if not example_path.exists():
-            raise FileNotFoundError("example_config.json is missing; cannot create config.json.")
-        shutil.copy(example_path, json_path)
+        with json_path.open("w", encoding="utf-8") as f:
+            json.dump(DEFAULT_CONFIG, f, indent=4)
+
+    fix_filters(json_path)
 
     # Load main config
     with json_path.open("r", encoding="utf-8") as fc:
