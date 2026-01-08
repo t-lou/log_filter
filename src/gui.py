@@ -130,12 +130,11 @@ class MainGui:
         if not self._filename:
             return
 
-        # Unlock and clear all text widgets
+        # Unlock and clear widgets
         for widget in self._text_widgets.values():
             widget.config(state="normal")
             widget.delete("1.0", tk.END)
 
-        # Prepare buffers for each tab
         buffers = {
             name: Buffer(
                 capacity=self._config["max_line"],
@@ -146,46 +145,40 @@ class MainGui:
 
         filters = load_filters(self._config)
 
-        # Stream file line-by-line (efficient for large logs)
-        count_lines = 0
         with self._filename.open("r", encoding="utf-8", errors="ignore") as f:
+            count_lines = 0
+
             for line in f:
                 if line.isspace():
                     continue
 
                 stripped = line.rstrip("\n")
 
-                # Always store in "original" if present
+                # Always store original
                 if "original" in buffers:
                     buffers["original"].add(stripped)
 
-                # Apply each filter
+                # Apply filters
                 for tab_name, flt in filters.items():
                     if flt.match(stripped):
                         buffers[tab_name].add(stripped)
 
-                # Keep GUI responsive
                 count_lines += 1
+
+                # Flush small chunks to GUI
                 if count_lines % 500 == 0:
+                    for name, widget in self._text_widgets.items():
+                        for buffered_line in buffers[name].get():
+                            widget.insert(tk.END, buffered_line + "\n")
+                        buffers[name].clear()
+
                     self._root.update_idletasks()
 
-                    # Insert buffered content into each tab
-                    for name, widget in self._text_widgets.items():
-                        if buffers[name]:
-                            widget.insert(
-                                tk.END,
-                                "\n".join(buffers[name].get()) + "\n",
-                            )
-                            buffers[name].clear()
-
-        # Display the remaining buffered content and free the widgets
+        # Final flush
         for name, widget in self._text_widgets.items():
-            if buffers[name]:
-                widget.insert(
-                    tk.END,
-                    "\n".join(buffers[name].get()) + "\n",
-                )
-                buffers[name].clear()
+            for buffered_line in buffers[name].get():
+                widget.insert(tk.END, buffered_line + "\n")
+            buffers[name].clear()
             widget.config(state="disabled")
 
     # ------------------------------------------------------------------
