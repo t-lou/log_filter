@@ -61,6 +61,9 @@ def test_save_last_collects_last_n():
 
 def test_save_last_exact_capacity():
     buf = Buffer(capacity=3, save_first=False)
+    buf.add("a")
+    buf.add("b")
+    buf.add("c")
     buf.add("x")
     buf.add("y")
     buf.add("z")
