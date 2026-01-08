@@ -1,42 +1,5 @@
-#!/usr/bin/env python3
-"""
-Simple tests without pytest.
-Run with:  python test_all.py
-"""
-
 from src.filter import Filter
 from src.utils import make_name_filename
-
-# -------------------------
-# Utility
-# -------------------------
-
-
-def _precheck_assert():
-    try:
-        assert False
-        print("assert NOT working (unexpected)")
-    except AssertionError:
-        print("assert working")
-
-
-def _run(test_fn):
-    """Run a test function and print a friendly message."""
-    name = test_fn.__name__
-    try:
-        test_fn()
-        print(f"[  OK  ] {name}")
-    except AssertionError as e:
-        print(f"[FAILED] {name}: {e}")
-        raise
-    except Exception as e:
-        print(f"[ERROR ] {name}: unexpected exception {e}")
-        raise
-
-
-# -------------------------
-# Tests
-# -------------------------
 
 
 def test_filter_plain():
@@ -123,24 +86,3 @@ def test_name_conversion():
     for name, expected in test_data.items():
         result = make_name_filename(name)
         assert result == expected, f"'{name}' -> '{result}', expected '{expected}'"
-
-
-# -------------------------
-# Main
-# -------------------------
-
-if __name__ == "__main__":
-    _precheck_assert()
-
-    tests = [
-        test_filter_plain,
-        test_filter_regex,
-        test_filter_all,
-        test_filter_any,
-        test_name_conversion,
-    ]
-
-    for t in tests:
-        _run(t)
-
-    print("\nAll tests passed.")

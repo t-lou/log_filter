@@ -1,10 +1,19 @@
+[project]
+name = "log_filter"
+version = "0.0.1"
+requires-python = ">=3.8"
+
 [tool.ruff]
 line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]  # E=pycodestyle, F=pyflakes, I=isort
+select = ["E", "F", "I"]
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
